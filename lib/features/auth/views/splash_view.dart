@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lchat/core/constants/app_colors.dart';
-import 'package:lchat/features/auth/views/login_view.dart';
-import 'package:lchat/core/extensions/media_query.dart';
-import 'package:lchat/features/auth/views/signup_view.dart';
+import 'package:chitchat/core/constants/app_colors.dart';
+import 'package:chitchat/features/auth/views/login_view.dart';
+import 'package:chitchat/core/extensions/media_query.dart';
+import 'package:chitchat/features/auth/views/signup_view.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

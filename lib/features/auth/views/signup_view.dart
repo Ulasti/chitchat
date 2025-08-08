@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../../chat/views/userlistpage.dart';
-import 'package:lchat/core/constants/app_colors.dart';
-import 'package:lchat/core/extensions/media_query.dart';
+import 'package:chitchat/core/constants/app_colors.dart';
+import 'package:chitchat/core/extensions/media_query.dart';
 import 'login_view.dart';
 
 class SignUpPage extends StatefulWidget {

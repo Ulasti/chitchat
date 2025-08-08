@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:lchat/features/chat/views/chat_page.dart';
-import 'package:lchat/core/constants/app_colors.dart';
+import 'package:chitchat/features/chat/views/chat_page.dart';
+import 'package:chitchat/core/constants/app_colors.dart';
 
 class UserListPage extends StatefulWidget {
   final IO.Socket socket;

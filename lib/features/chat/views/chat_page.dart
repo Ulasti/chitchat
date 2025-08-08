@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lchat/core/constants/app_colors.dart';
+import 'package:chitchat/core/constants/app_colors.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatPage extends StatefulWidget {
