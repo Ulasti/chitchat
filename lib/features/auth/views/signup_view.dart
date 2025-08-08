@@ -4,6 +4,7 @@ import '../viewmodels/login_viewmodel.dart';
 import '../../chat/views/userlistpage.dart';
 import 'package:lchat/core/constants/app_colors.dart';
 import 'package:lchat/core/extensions/media_query.dart';
+import 'login_view.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -95,9 +96,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   fontSize: 45,
                                 ),
                           ),
-                          SizedBox(height: 200),
+                          SizedBox(height: 170),
                           Text(
-                            'Giriş Yap',
+                            'Kayıt Ol',
                             style: Theme.of(context).textTheme.bodyLarge
                                 ?.copyWith(
                                   color: AppColors.appBlack,
@@ -118,9 +119,53 @@ class _SignUpPageState extends State<SignUpPage> {
                                   vertical: 5,
                                   horizontal: 10,
                                 ),
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/profile.png',
+                                    color: AppColors.appBlack,
+                                    width: 10,
+                                    height: 10,
+                                  ),
+                                ),
+                                hintText: 'Ad Soyad',
+                                labelStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.appBlack.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                errorText: viewModel.errorMessage,
+                                filled: true,
+                                fillColor: AppColors.appWhite,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              enabled: !viewModel.isLoading,
+                            ),
+                          ),
+                          SizedBox(height: 25),
+                          SizedBox(
+                            width: context.screenWidth * 0.8,
+                            height: context.screenHeight * 0.045,
+                            child: TextField(
+                              onTapOutside: (_) =>
+                                  FocusScope.of(context).unfocus(),
+                              controller: usernameController,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 10,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.mail_outlined,
-                                  color: AppColors.appPrimary.withValues(),
+                                  color: AppColors.appBlack,
                                 ),
                                 hintText: 'E-mail',
                                 labelStyle: Theme.of(context)
@@ -164,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                                 prefixIcon: Icon(
                                   Icons.lock,
-                                  color: AppColors.appPrimary.withValues(),
+                                  color: AppColors.appBlack,
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 5,
@@ -188,30 +233,151 @@ class _SignUpPageState extends State<SignUpPage> {
                               enabled: !viewModel.isLoading,
                             ),
                           ),
-                          SizedBox(height: 200),
-                          viewModel.isLoading
-                              ? CircularProgressIndicator()
-                              : SizedBox(
-                                  width: context.screenWidth * 0.8,
-                                  height: context.screenHeight * 0.045,
-                                  child: ElevatedButton(
-                                    onPressed: () => _handleLogin(
-                                      usernameController,
-                                      passwordController,
-                                    ),
-                                    child: Text(
-                                      'Giriş Yap',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            color: AppColors.appBlack,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16,
-                                          ),
-                                    ),
-                                  ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Checkbox(
+                                fillColor: MaterialStateProperty.all<Color>(
+                                  Colors.white,
                                 ),
+                                activeColor: AppColors.appPrimary,
+                                checkColor: AppColors.appBlack,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                side: BorderSide(
+                                  color: AppColors.appBlack,
+                                  width: 2,
+                                ),
+                                value: viewModel.isChecked,
+                                onChanged: (value) => setState(() {
+                                  // viewModel.isChecked = value ?? false;
+                                }),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Gizlilik Politikası ve Aydınlatma Metnini okudum, kabul ediyorum',
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: AppColors.appBlack,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Checkbox(
+                                fillColor: MaterialStateProperty.all<Color>(
+                                  Colors.white,
+                                ),
+                                activeColor: AppColors.appPrimary,
+                                checkColor: AppColors.appBlack,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                side: BorderSide(
+                                  color: AppColors.appBlack,
+                                  width: 2,
+                                ),
+                                value: viewModel.isChecked,
+                                onChanged: (value) => setState(() {
+                                  // viewModel.isChecked = value ?? false;
+                                }),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Üyelik Koşulları ve Açık Rıza Metni’ni okudum, kabul ediyorum.',
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: AppColors.appBlack,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Checkbox(
+                                fillColor: MaterialStateProperty.all<Color>(
+                                  Colors.white,
+                                ),
+                                activeColor: AppColors.appPrimary,
+                                checkColor: AppColors.appBlack,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                side: BorderSide(
+                                  color: AppColors.appBlack,
+                                  width: 2,
+                                ),
+                                value: viewModel.isChecked,
+                                onChanged: (value) => setState(() {
+                                  // viewModel.isChecked = value ?? false;
+                                }),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Ticari İleti İzinlerine İlişkin Bilgilendirmeyi okudum anladım. Bu kapsamda tarafıma elektronik ileti gönderilmesine izin veriyorum.',
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: AppColors.appBlack,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: context.screenWidth * 0.8,
+                            height: context.screenHeight * 0.045,
+                            child: ElevatedButton(
+                              onPressed: () => _handleLogin(
+                                usernameController,
+                                passwordController,
+                              ),
+                              child: Text(
+                                'Giriş Yap',
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.appBlack,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => LoginPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'ChitChat Üyeliğin var mı? Giriş Yap',
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.appWhite,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

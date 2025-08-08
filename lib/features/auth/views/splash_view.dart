@@ -92,7 +92,7 @@ class _SplashPageState extends State<SplashPage> {
                   height: context.screenHeight * 0.045,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => SignUpPage()),
                       );
@@ -112,7 +112,7 @@ class _SplashPageState extends State<SplashPage> {
                   height: context.screenHeight * 0.045,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => LoginPage()),
                       );

@@ -4,6 +4,7 @@ import '../viewmodels/login_viewmodel.dart';
 import '../../chat/views/userlistpage.dart';
 import 'package:lchat/core/constants/app_colors.dart';
 import 'package:lchat/core/extensions/media_query.dart';
+import 'signup_view.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -188,30 +189,82 @@ class _LoginPageState extends State<LoginPage> {
                               enabled: !viewModel.isLoading,
                             ),
                           ),
-                          SizedBox(height: 200),
-                          viewModel.isLoading
-                              ? CircularProgressIndicator()
-                              : SizedBox(
-                                  width: context.screenWidth * 0.8,
-                                  height: context.screenHeight * 0.045,
-                                  child: ElevatedButton(
-                                    onPressed: () => _handleLogin(
-                                      usernameController,
-                                      passwordController,
-                                    ),
-                                    child: Text(
-                                      'Giriş Yap',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            color: AppColors.appBlack,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16,
-                                          ),
-                                    ),
-                                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Checkbox(
+                                fillColor: MaterialStateProperty.all<Color>(
+                                  Colors.white,
                                 ),
+                                activeColor: AppColors.appPrimary,
+                                checkColor: AppColors.appBlack,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                side: BorderSide(
+                                  color: AppColors.appBlack,
+                                  width: 2,
+                                ),
+                                value: viewModel.isChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    viewModel.isChecked = value ?? false;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Beni Hatırla',
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.appBlack,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 180),
+                          SizedBox(
+                            width: context.screenWidth * 0.8,
+                            height: context.screenHeight * 0.045,
+                            child: ElevatedButton(
+                              onPressed: () => _handleLogin(
+                                usernameController,
+                                passwordController,
+                              ),
+                              child: Text(
+                                'Giriş Yap',
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.appBlack,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => SignUpPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'ChitChat Üyeliğin yok mu? Kayıt Ol',
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.appWhite,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

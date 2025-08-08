@@ -56,10 +56,7 @@ class _UserListPageState extends State<UserListPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.settings, color: AppColors.appWhite, size: 28),
-            onPressed: () {
-              widget.socket.emit('logout', widget.username);
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-            },
+            onPressed: () {},
           ),
         ],
         backgroundColor: AppColors.appPrimary,
@@ -78,12 +75,11 @@ class _UserListPageState extends State<UserListPage> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   hintText: '...',
                   hintStyle: TextStyle(color: AppColors.appBlack),
-
                   prefixIcon: Icon(
                     Icons.search_rounded,
                     color: AppColors.appBlack,
                   ),
-                  fillColor: AppColors.appBlack.withValues(alpha: 0.25),
+                  fillColor: AppColors.appGrey,
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -101,12 +97,11 @@ class _UserListPageState extends State<UserListPage> {
             ),
           ),
           SizedBox(
-            height: 600,
+            height: 560,
             width: double.infinity,
             child: ListView.builder(
               itemCount: users.length,
-              itemBuilder: (_, i) => ListTile(
-                title: Text(users[i]),
+              itemBuilder: (_, i) => GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -119,32 +114,139 @@ class _UserListPageState extends State<UserListPage> {
                     ),
                   );
                 },
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(width: 10),
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: AssetImage('assets/images/pp.png'),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              users[i],
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: AppColors.appPrimary,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 24,
+                                  ),
+                            ),
+                            Text(
+                              '${users[i]} ile sohbet',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: AppColors.appBlack,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                            ),
+                            SizedBox(height: 12),
+                          ],
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Text(
+                            '00.00',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: AppColors.appPrimary,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // ListTile(
+                    //   leading: CircleAvatar(
+                    //     radius: 30,
+                    //     backgroundImage: AssetImage('assets/images/pp.png'),
+                    //     backgroundColor: Colors.transparent,
+                    //   ),
+                    //   title: Text(users[i]),
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (_) => ChatPage(
+                    //           socket: widget.socket,
+                    //           toUser: users[i],
+                    //           fromUser: widget.username,
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 20,
+                      ),
+                      child: Divider(
+                        height: 1,
+                        color: AppColors.appBlack.withValues(alpha: 0.15),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-
-          SizedBox(
-            height: 20,
-            width: double.infinity,
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    // Handle add user action
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () {
-                    // Handle remove user action
-                  },
-                ),
-                IconButton(icon: Icon(Icons.refresh), onPressed: () {}),
-              ],
-            ),
-          ),
         ],
+      ),
+      bottomNavigationBar: Container(
+        color: AppColors.appPrimary,
+        child: SizedBox(
+          height: 86,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: Image.asset(
+                  'assets/icons/status.png',
+                  width: 27,
+                  height: 27,
+                ),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () {
+                  //xd
+                },
+              ),
+              SizedBox(width: 10),
+              IconButton(
+                icon: Image.asset(
+                  'assets/icons/chats.png',
+                  width: 27,
+                  height: 27,
+                ),
+                onPressed: () {
+                  //xd
+                },
+              ),
+              SizedBox(width: 10),
+              IconButton(
+                icon: Image.asset(
+                  'assets/icons/callhistory.png',
+                  width: 27,
+                  height: 27,
+                ),
+                onPressed: () {
+                  //xd
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

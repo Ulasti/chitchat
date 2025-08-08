@@ -3,19 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel extends ChangeNotifier {
   late IO.Socket _socket;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isChecked = false;
+  String _savedUsername = '';
 
-  // Getters
   IO.Socket get socket => _socket;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool get isChecked => _isChecked;
+  String get savedUsername => _savedUsername;
 
-  // API Base URL - could be moved to a config file
   static const String baseUrl = 'http://192.168.1.162:3000';
+
+  LoginViewModel() {
+    _loadSavedData();
+  }
+
+  set isChecked(bool value) {
+    _isChecked = value;
+    notifyListeners();
+  }
+
+  void setChecked(bool value) {
+    _isChecked = value;
+    notifyListeners();
+  }
 
   void _setLoading(bool loading) {
     _isLoading = loading;
@@ -27,10 +44,41 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> registerUser(String username) async {
-    _setLoading(true);
-    _setError(null);
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isChecked = prefs.getBool('remember_me') ?? false;
+    _savedUsername = prefs.getString('saved_username') ?? '';
+    notifyListeners();
+  }
 
+  Future<void> _saveUserData(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_isChecked) {
+      await prefs.setBool('remember_me', true);
+      await prefs.setString('saved_username', username);
+      _savedUsername = username;
+    } else {
+      await prefs.remove('remember_me');
+      await prefs.remove('saved_username');
+      _savedUsername = '';
+    }
+  }
+
+  Future<bool> checkSavedLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    final remembeMe = prefs.getBool('remember_me') ?? false;
+    final savedUsername = prefs.getString('saved_username') ?? '';
+
+    if (remembeMe && savedUsername.isNotEmpty) {
+      _savedUsername = savedUsername;
+      _isChecked = true;
+
+      return await loginUser(savedUsername, autoLogin: true);
+    }
+    return false;
+  }
+
+  Future<bool> registerUser(String username) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
@@ -42,17 +90,15 @@ class LoginViewModel extends ChangeNotifier {
         print('User registered successfully');
         return true;
       } else if (response.statusCode == 400) {
-        print('Welcome back, $username!');
-        return true; // User exists, but can still login
+        print('Welcome back, $username!'); // User already exists
+        return true;
       } else {
-        _setError('Unexpected error: ${response.statusCode}');
+        _setError('Registration failed: ${response.statusCode}');
         return false;
       }
     } catch (e) {
       _setError('Network error: $e');
       return false;
-    } finally {
-      _setLoading(false);
     }
   }
 
@@ -62,23 +108,33 @@ class LoginViewModel extends ChangeNotifier {
         'transports': ['websocket'],
       });
 
-      // Return a future that completes when socket connects
       final completer = Completer<bool>();
+      bool isCompleted = false;
 
       _socket.onConnect((_) {
-        print('Socket connected');
+        print('Socket connected for user: $username');
         _socket.emit('login', username);
-        completer.complete(true);
+        if (!isCompleted) {
+          isCompleted = true;
+          completer.complete(true);
+        }
       });
 
       _socket.onConnectError((error) {
         print('Socket connection error: $error');
         _setError('Failed to connect to chat server');
-        completer.complete(false);
+        if (!isCompleted) {
+          isCompleted = true;
+          completer.complete(false);
+        }
       });
 
-      _socket.on('user_list', (data) {
-        print('User list: $data');
+      // Timeout after 10 seconds
+      Timer(Duration(seconds: 10), () {
+        if (!isCompleted) {
+          isCompleted = true;
+          completer.complete(false);
+        }
       });
 
       return completer.future;
@@ -88,18 +144,47 @@ class LoginViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> loginUser(String username) async {
-    // Register user first
-    final registered = await registerUser(username);
-    if (!registered) return false;
+  Future<bool> loginUser(String username, {bool autoLogin = false}) async {
+    if (!autoLogin) {
+      _setLoading(true);
+      _setError(null);
+    }
 
-    // Then connect socket
-    final connected = await connectSocket(username);
-    return connected;
+    try {
+      // Register user first (handles both new and existing users)
+      final registered = await registerUser(username);
+      if (!registered) return false;
+
+      // Connect to socket
+      final connected = await connectSocket(username);
+      if (!connected) return false;
+
+      // Save user data if checkbox is checked
+      await _saveUserData(username);
+
+      return true;
+    } catch (e) {
+      _setError('Login failed: $e');
+      return false;
+    } finally {
+      if (!autoLogin) {
+        _setLoading(false);
+      }
+    }
   }
 
-  void clearError() {
-    _setError(null);
+  Future<void> clearSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('remember_me');
+    await prefs.remove('saved_username');
+    _isChecked = false;
+    _savedUsername = '';
+
+    if (_socket.connected) {
+      _socket.disconnect();
+    }
+
+    notifyListeners();
   }
 
   @override
