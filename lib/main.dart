@@ -11,6 +11,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -32,6 +34,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AppInitializer extends StatefulWidget {
+  const AppInitializer({super.key});
+
   @override
   _AppInitializerState createState() => _AppInitializerState();
 }

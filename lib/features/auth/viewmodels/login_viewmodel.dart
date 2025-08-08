@@ -87,10 +87,9 @@ class LoginViewModel extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print('User registered successfully');
         return true;
       } else if (response.statusCode == 400) {
-        print('Welcome back, $username!'); // User already exists
+        // User already exists
         return true;
       } else {
         _setError('Registration failed: ${response.statusCode}');
@@ -112,7 +111,6 @@ class LoginViewModel extends ChangeNotifier {
       bool isCompleted = false;
 
       _socket.onConnect((_) {
-        print('Socket connected for user: $username');
         _socket.emit('login', username);
         if (!isCompleted) {
           isCompleted = true;
@@ -121,7 +119,6 @@ class LoginViewModel extends ChangeNotifier {
       });
 
       _socket.onConnectError((error) {
-        print('Socket connection error: $error');
         _setError('Failed to connect to chat server');
         if (!isCompleted) {
           isCompleted = true;
