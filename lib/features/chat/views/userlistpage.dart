@@ -9,7 +9,7 @@ class UserListPage extends StatefulWidget {
   final IO.Socket socket;
   final String username;
 
-  UserListPage({required this.socket, required this.username});
+  const UserListPage({super.key, required this.socket, required this.username});
 
   @override
   _UserListPageState createState() => _UserListPageState();

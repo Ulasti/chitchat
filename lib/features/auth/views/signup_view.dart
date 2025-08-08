@@ -7,6 +7,8 @@ import 'package:chitchat/core/extensions/media_query.dart';
 import 'login_view.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -238,7 +240,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Checkbox(
-                                fillColor: MaterialStateProperty.all<Color>(
+                                fillColor: WidgetStateProperty.all<Color>(
                                   Colors.white,
                                 ),
                                 activeColor: AppColors.appPrimary,
@@ -272,7 +274,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Checkbox(
-                                fillColor: MaterialStateProperty.all<Color>(
+                                fillColor: WidgetStateProperty.all<Color>(
                                   Colors.white,
                                 ),
                                 activeColor: AppColors.appPrimary,
@@ -306,7 +308,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Checkbox(
-                                fillColor: MaterialStateProperty.all<Color>(
+                                fillColor: WidgetStateProperty.all<Color>(
                                   Colors.white,
                                 ),
                                 activeColor: AppColors.appPrimary,

@@ -7,7 +7,8 @@ class ChatPage extends StatefulWidget {
   final String toUser;
   final String fromUser;
 
-  ChatPage({
+  const ChatPage({
+    super.key,
     required this.socket,
     required this.toUser,
     required this.fromUser,
@@ -70,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${widget.toUser}',
+                  widget.toUser,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: AppColors.appWhite,
                     fontWeight: FontWeight.w600,
